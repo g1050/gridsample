@@ -79,3 +79,9 @@ print(f"cpu {cpu_output}")
 difference = np.mean((torch_output.numpy() - cpu_output) ** 2)
 print(f"Mean Squared Difference: {difference}")
 print(f"outputshape {cpu_output.shape}")
+
+# save result
+torch_output_path = "torch_output.bin"
+cpu_output_path = "cpu_output.bin"
+cpu_output.astype(np.float32).tofile(cpu_output_path)
+torch_output.numpy().tofile(torch_output_path)
