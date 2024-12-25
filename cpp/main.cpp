@@ -1,6 +1,30 @@
 #include "gridsample.h"
 #include <fstream>
 #include <stdexcept>
+#include <iostream>
+
+void saveVectorToBinFile(const std::vector<float>& vec, const std::string& filename) {
+    // 打开文件，std::ios::binary表示二进制模式
+    std::ofstream outFile(filename, std::ios::binary);
+    
+    // 检查文件是否打开成功
+    if (!outFile) {
+        std::cerr << "Error opening file for writing: " << filename << std::endl;
+        return;
+    }
+    
+    // 写入数据的大小（可选，用于之后读取时验证）
+    // size_t size = vec.size();
+    // outFile.write(reinterpret_cast<const char*>(&size), sizeof(size));
+    
+    // 将vector中的每个元素写入文件
+    outFile.write(reinterpret_cast<const char*>(vec.data()), vec.size() * sizeof(float));
+    
+    // 关闭文件
+    outFile.close();
+    
+    std::cout << "Vector saved to " << filename << std::endl;
+}
 
 std::vector<float> loadBinaryFile(const std::string& filename) {
     // 打开二进制文件
@@ -43,14 +67,15 @@ int main() {
         output_data.resize(300);
         DgGridSample sample(true,0,0,input_tensor.data(),grid.data(),output_data.data(),input_dims,grid_dims);
         sample.Compute();
+        saveVectorToBinFile(output_data,"../py/cpp_output.bin");
         // 打印数据用于验证
-        auto data = output_data;
+        // auto data = output_data;
         // std::cout << "Loaded " << data.size() << " floats from " << filename << ":\n";
-        for (size_t i = 0; i < data.size(); ++i) {
-            std::cout << data[i] << " ";
-            if ((i + 1) % 10 == 0) std::cout << "\n"; // 每10个值换行
-        }
-        std::cout << "\n";
+        // for (size_t i = 0; i < data.size(); ++i) {
+        //     std::cout << data[i] << " ";
+        //     if ((i + 1) % 10 == 0) std::cout << "\n"; // 每10个值换行
+        // }
+        // std::cout << "\n";
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << "\n";
         return 1;
