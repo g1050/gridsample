@@ -64,7 +64,8 @@ else:
     input_tensor.tofile(input_tensor_file)
     grid.tofile(grid_file)
 
-
+print(f"input_tensor {input_tensor}")
+print(f"grid {grid}")
 # PyTorch grid_sample
 torch_output = torch.nn.functional.grid_sample(torch.tensor(input_tensor), torch.tensor(grid), mode='bilinear', padding_mode='zeros', align_corners=True)
 

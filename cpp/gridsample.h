@@ -17,14 +17,14 @@ enum GridSamplerPadding { Zeros = 0, Border = 1, Reflection = 2 };
 class DgGridSample
 {
 public:
-  DgGridSample(int64_t align_corners = 0,
+  DgGridSample(bool align_corners = 0,
                int64_t interpolation_mode = 0,
                int64_t padding_mode = 0,
                float *input_data=nullptr,
                float *grid_data=nullptr,
                float *out_ptr=nullptr,
                const int64_t input_dims[4] = {0},
-               const int64_t grid_dims[2] = {0})
+               const int64_t grid_dims[4] = {0})
       : align_corners_(align_corners),
         interpolation_mode_(interpolation_mode),
         padding_mode_(padding_mode),
@@ -32,7 +32,7 @@ public:
         grid_data(grid_data),
         out_ptr(out_ptr){
           std::copy(input_dims, input_dims + 4, this->input_dims);
-          std::copy(grid_dims, grid_dims + 2, this->grid_dims);
+          std::copy(grid_dims, grid_dims + 4, this->grid_dims);
         }
     void Compute();
 private:
@@ -49,12 +49,12 @@ private:
     static inline void get_cubic_upsample_coefficients(float coeffs[4], float t);
     static inline float cubic_interp1d(float x0, float x1, float x2, float x3, float t);
     
-    int64_t align_corners_;
+    bool align_corners_;
     int64_t interpolation_mode_;
     int64_t padding_mode_;
     float *input_data = nullptr; // // 输入张量
     float *grid_data = nullptr; // 网格张量
     float *out_ptr = nullptr;
     int64_t input_dims[4] = {0};
-    int64_t grid_dims[2] = {0};
+    int64_t grid_dims[4] = {0};
 };
